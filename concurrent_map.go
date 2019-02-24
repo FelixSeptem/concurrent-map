@@ -31,6 +31,7 @@ func New(sharedNum int) *ConcurrentMap {
 	}
 	m := ConcurrentMap{
 		sharedNum: sharedNum,
+		maps:      make([]*ConcurrentMapShared, sharedNum),
 	}
 	for i := 0; i < sharedNum; i++ {
 		m.maps[i] = &ConcurrentMapShared{items: make(map[fmt.Stringer]interface{})}
