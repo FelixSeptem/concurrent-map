@@ -19,7 +19,6 @@ type ConcurrentMap struct {
 
 // A "thread" safe string to anything map.
 type ConcurrentMapShared struct {
-	sharedNum    int
 	items        map[fmt.Stringer]interface{}
 	sync.RWMutex // Read Write mutex, guards access to internal map.
 }
@@ -43,7 +42,9 @@ func New(sharedNum int) *ConcurrentMap {
 func (m *ConcurrentMap) getShard(key string) *ConcurrentMapShared {
 	b := bytes.NewBufferString(key)
 	s := xxhash.New()
-	s.Write(b.Bytes())
+	if _,err:=s.Write(b.Bytes());err!=nil{
+		panic(err)
+	}
 	return m.maps[uint64(s.Sum64())%uint64(m.sharedNum)]
 }
 
